@@ -1,32 +1,33 @@
-# React + TypeScript + Vite
+# LieOptics Designer (frontend prototype)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+COMP 523 Team C (Team 17). A first-draft web UI for [LieOptics](https://github.com/hausenshi/LieOptics), meant to be looked at and critiqued before we commit to the real design.
 
-Currently, two official plugins are available:
+**Everything the UI shows is fake.** Aberration values, spot diagrams, and optimization come from `src/api/mockApi.ts`, which is a smooth function of the lens parameters, not real optics.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run it
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run lint
+npm run build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## What it does
+
+- Lens builder: add, remove, reorder surfaces; radius, thickness, glass (same glasses as `Lie_Optics/constants.py`); validation.
+- Layout sketch: side view of the lens, with glass regions shaded.
+- Results tabs: third-order aberration coefficients, spot diagram per field angle (0, 5, 10 degrees), and a mock optimization run that updates the radii.
+- Save and open a lens as JSON. Loads the Cooke triplet from `basic_singlet.py` by default.
+
+## Connecting the real backend
+
+The UI only talks to the `LieOpticsApi` interface in `src/api/api.ts` (`analyze`, `spotDiagram`, `optimize`). To go real, write a second implementation that calls a thin Python service (or an Electron child process) wrapping `Lie_Optics` (`OpticalSystemSpec`, `LensOptimizer`, `SpotDiagram`) and swap it in `src/App.tsx`. No component changes needed.
+
+## Not done yet
+
+Electron packaging, real backend, Figma-matched styling, phase-space plots, optimizer bounds and constraints, aspheric surfaces, unit tests.
+
+## Workflow
+
+Gitflow (`main`, `develop`, `feature/*`), Conventional Commits, pre-commit hooks (`.pre-commit-config.yaml`).
