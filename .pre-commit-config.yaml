@@ -1,0 +1,21 @@
+# Install once: pip install pre-commit && pre-commit install --install-hooks -t pre-commit -t commit-msg
+repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.0.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+  - repo: local
+    hooks:
+      - id: lint
+        name: oxlint
+        entry: npm run lint
+        language: system
+        pass_filenames: false
+        types_or: [ts, tsx]
+      - id: typecheck
+        name: tsc
+        entry: npx tsc -b
+        language: system
+        pass_filenames: false
+        types_or: [ts, tsx]
